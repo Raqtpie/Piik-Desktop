@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'">
+<title>Piik Desktop — 确认</title><link rel="stylesheet" href="confirm.css">
+</head><body data-theme="light">
+<main class="dialog" role="dialog" aria-modal="true" aria-labelledby="title" aria-describedby="description">
+  <div class="drag-handle"><span class="brand-dot"></span><span id="eyebrow">PIIK DESKTOP</span><button type="button" id="close" aria-label="关闭">×</button></div>
+  <div class="content">
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3 29 26H3L16 3Z"/><path d="M16 12v7M16 24h.01"/></svg>
+    </div>
+    <h1 id="title">确认操作</h1>
+    <p id="description"></p>
+    <div id="details" class="details" hidden></div>
+    <p id="footnote" class="footnote" hidden></p>
+  </div>
+  <footer id="actions" class="actions"></footer>
+</main>
+<script src="confirm-dialog.cjs"></script>
+</body></html>

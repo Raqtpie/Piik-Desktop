@@ -1,0 +1,50 @@
+name: Build Piik Desktop
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            arch: x64
+            artifact: windows-x64
+          - os: macos-14
+            arch: arm64
+            artifact: macos-arm64
+          - os: macos-15-intel
+            arch: x64
+            artifact: macos-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          architecture: ${{ matrix.arch }}
+      - name: Install npm packages
+        run: npm ci --no-audit --no-fund
+      - name: Validate source
+        run: npm run check
+      - name: Download pinned, SHA-256 verified Piik App
+        run: npm run upstream:prepare
+      - name: Build unsigned package
+        run: node node_modules/electron-builder/cli.js --${{ matrix.arch }}
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: piik-desktop-${{ matrix.artifact }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+          if-no-files-found: error

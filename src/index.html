@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Piik Desktop</title><link rel="stylesheet" href="style.css">
+</head><body data-theme="light">
+<!-- This launcher intentionally resembles upstream Piik, while the remote sharing UI remains upstream-owned. -->
+<div id="launcher" class="launcher">
+  <header class="masthead">
+    <button class="logo-button" id="logoHome" type="button" title="Piik Desktop" aria-label="Piik Desktop">
+      <img class="robot small" src="piik-mark.svg" alt="" draggable="false">
+    </button>
+    <nav class="controls" aria-label="Display settings">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button id="zhBtn" class="lang active" type="button" aria-pressed="true">中</button>
+        <button id="enBtn" class="lang" type="button" aria-pressed="false">EN</button>
+      </div>
+      <button id="themeBtn" class="control-pill" type="button" aria-label="Toggle theme"><span class="theme-glyph">◕</span><span id="themeLabel">暗色</span></button>
+      <button id="settingsBtn" class="icon-btn" type="button" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m9.5 3-.5 2-1.7 1-2-.5-2.5 4.3 1.5 1.5v1.4l-1.5 1.5 2.5 4.3 2-.5 1.7 1 .5 2h5l.5-2 1.7-1 2 .5 2.5-4.3-1.5-1.5v-1.4l1.5-1.5-2.5-4.3-2 .5-1.7-1-.5-2Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </nav>
+  </header>
+  <main class="welcome">
+    <img class="robot hero" src="piik-mark.svg" alt="" draggable="false">
+    <p id="tagline" class="tagline"><span class="spark">✦</span> <span data-i18n="tagline">隐藏成就：有人懂你的快乐。</span></p>
+    <h1 data-i18n="open">打开 Piik</h1>
+    <div class="mode-cards" role="group" aria-label="Piik mode">
+      <button type="button" data-mode="local" class="mode-card" id="localBtn">
+        <svg viewBox="0 0 32 32" class="mode-icon" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="4"/><circle cx="23" cy="12" r="3"/><path d="M4 26v-3q0-6 8-6t8 6v3M23 19q6 0 6 6v1"/></svg>
+        <strong data-i18n="local">本地房间</strong>
+        <small data-i18n="localNote">同一局域网内使用</small>
+      </button>
+      <button type="button" data-mode="link" class="mode-card" id="linkBtn">
+        <svg viewBox="0 0 32 32" class="mode-icon" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4c-7 7-7 17 0 24M16 4c7 7 7 17 0 24"/></svg>
+        <strong data-i18n="public">公网邀请</strong>
+        <small data-i18n="publicNote">生成一个临时公网邀请链接</small>
+      </button>
+      <button type="button" data-mode="site" class="mode-card selected" id="siteBtn">
+        <svg viewBox="0 0 32 32" class="mode-icon" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="20" height="9" rx="2"/><rect x="6" y="18" width="20" height="9" rx="2"/><path d="M11 9.5h.1M11 22.5h.1M16 9.5h6M16 22.5h6"/></svg>
+        <strong data-i18n="site">连接站点</strong>
+        <small data-i18n="siteNote">使用已有的 Piik 站点</small>
+      </button>
+    </div>
+    <form id="connectForm" class="connect-form">
+      <div class="site-field" id="siteField">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l2-2A5 5 0 0 0 12 3l-2 2m4 6a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 21l2-2"/></svg>
+        <input id="siteInput" type="text" inputmode="url" spellcheck="false" autocomplete="url" placeholder="https://your-piik.example" aria-label="Piik site URL">
+      </div>
+      <div id="recentSites" class="recent-sites" aria-label="Recent sites" hidden></div>
+      <label id="redirectOption" class="redirect-option">
+        <input id="allowRedirects" type="checkbox" aria-describedby="redirectHint">
+        <span class="redirect-option-copy">
+          <strong data-i18n="allowRedirects">允许网站自动跳转</strong>
+          <small id="redirectHint" data-i18n="redirectHint">网站地址或端口变化时，直接继续连接。只建议用于你信任的网站。</small>
+        </span>
+      </label>
+      <button id="connectBtn" type="submit" class="go-button"><span class="go-arrow">➜</span><span data-i18n="enter">进入 Piik</span></button>
+    </form>
+    <div class="message" id="banner" role="status" aria-live="polite" hidden></div>
+    <footer>
+      <div class="footer-version">Piik Desktop <span id="version">v0.1.0</span></div>
+      <div data-i18n="credit">Raqtpie &amp; Piik community · MIT 开源</div>
+      <div data-i18n="upstreamCredit">基于 TNTcraft 与贡献者开发的 Piik</div>
+      <div class="footer-links"><button id="githubBtn" type="button" data-i18n="github">桌面端源码 ↗</button><button id="officialBtn" type="button" data-i18n="official">Piik 官网 ↗</button></div>
+    </footer>
+  </main>
+</div>
+<!-- The native WebContentsView overlays the area below this toolbar while connected. -->
+<div id="toolbar" class="toolbar" hidden>
+  <button id="homeBtn" class="tool primary" type="button" title="Home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span data-i18n="home">首页</span>
+  </button>
+  <div class="tool-divider"></div>
+  <span id="connectionDot" class="connection-dot"></span>
+  <span id="connectedLabel" class="connected-label">Piik</span>
+  <div class="tool-spacer"></div>
+  <button id="refreshBtn" class="tool" type="button" title="Refresh">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0 1.5 5M20 4v7h-7"/></svg><span data-i18n="refresh">刷新</span>
+  </button>
+  <button id="toolbarLogsBtn" class="tool" type="button" title="Diagnostics">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg><span data-i18n="logs">日志</span>
+  </button>
+</div>
+<main id="loadingPanel" class="loading-panel" role="status" aria-live="polite" hidden>
+  <img class="robot loading-mark" src="piik-mark.svg" alt="" draggable="false">
+  <span class="loading-spinner" aria-hidden="true"></span>
+  <strong data-i18n="loadingSite">正在打开 Piik…</strong>
+  <p data-i18n="loadingHint">连接就绪后将自动进入。</p>
+</main>
+<div id="settingsModal" class="modal-backdrop" hidden>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <h2 id="settingsTitle" data-i18n="settings">桌面设置</h2>
+    <label class="setting-line"><input id="trayCheck" type="checkbox"><span data-i18n="tray">关闭窗口时最小化到托盘</span></label>
+    <p data-i18n="settingNote">屏幕分享、音频和房间设置仍由原版 Piik 页面管理。</p>
+    <div class="modal-actions"><button id="settingsLogsBtn" class="secondary-button" type="button" data-i18n="logs">日志</button><button id="settingsCloseBtn" class="go-button" type="button" data-i18n="done">完成</button></div>
+  </section>
+</div>
+<script src="renderer.cjs"></script>
+</body></html>
