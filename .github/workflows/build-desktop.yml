@@ -48,3 +48,65 @@ jobs:
             dist/*.dmg
             dist/*.zip
           if-no-files-found: error
+  release:
+    name: Publish Release
+    needs: build
+    if: >-
+      github.event_name == 'push' &&
+      (startsWith(github.ref, 'refs/tags/v') ||
+       (github.ref == 'refs/heads/main' && github.event.head_commit.message == 'release: publish Piik Desktop v0.1.0'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: piik-desktop-*
+          path: artifacts
+          merge-multiple: true
+      - name: Prepare release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(node -p "require('./package.json').version")
+          tag="v$version"
+          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "$tag" ]]; then
+            echo "::error::Tag and package version must match"
+            exit 1
+          fi
+          echo "RELEASE_TAG=$tag" >> "$GITHUB_ENV"
+          mkdir -p release-assets
+          cp "artifacts/Piik Desktop Setup $version.exe" "release-assets/Piik-Desktop-$version-windows-x64.exe"
+          cp "artifacts/Piik Desktop-$version.dmg" "release-assets/Piik-Desktop-$version-macos-x64.dmg"
+          cp "artifacts/Piik Desktop-$version-mac.zip" "release-assets/Piik-Desktop-$version-macos-x64.zip"
+          cp "artifacts/Piik Desktop-$version-arm64.dmg" "release-assets/Piik-Desktop-$version-macos-arm64.dmg"
+          cp "artifacts/Piik Desktop-$version-arm64-mac.zip" "release-assets/Piik-Desktop-$version-macos-arm64.zip"
+          git archive --format=zip --prefix=Piik-Desktop/ HEAD -o "release-assets/Piik-Desktop-$version-source.zip"
+          (cd release-assets && sha256sum *.exe *.dmg *.zip > SHA256SUMS.txt)
+      - name: Upload draft and publish after verification
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::Release already exists; no existing release or assets will be replaced"
+            exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            git fetch origin "refs/tags/$RELEASE_TAG"
+            if [[ "$(git rev-parse 'FETCH_HEAD^{commit}')" != "$GITHUB_SHA" ]]; then
+              echo "::error::Existing tag points to a different commit"
+              exit 1
+            fi
+          fi
+          gh release create "$RELEASE_TAG" release-assets/* \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "Piik Desktop $RELEASE_TAG" --notes-file RELEASE-NOTES.md --draft
+          count=$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets | length')
+          if [[ "$count" != 7 ]]; then
+            echo "::error::Expected all seven release assets; release remains a draft"
+            exit 1
+          fi
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest

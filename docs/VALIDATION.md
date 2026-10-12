@@ -33,6 +33,10 @@ source, packaging and repository hygiene were reviewed before the first release.
 - CI uses the lockfile with npm ci and invokes the builder directly to avoid npm
   interpreting builder architecture flags. Electron binary installation is explicit
   through the project's postinstall script.
+- macOS target definitions inherit the CLI/runner architecture. Declaring both
+  architectures inside each target made every CI runner package both Electron
+  variants with only that runner's native Core/helper, creating mixed-architecture
+  packages. Local build review retains only matching packages from each runner.
 
 ## Automated checks
 
@@ -50,9 +54,10 @@ Windows launcher, source-card layout, native window/display previews and multi-L
 startup were exercised during development. The native helper produced a bounded
 320x180 24-bit BMP through the existing source-preview command.
 
-The macOS preview fix is source-reviewed but has not been compiled or tested on a
-Mac. It must be verified in macOS CI and on physical Intel/Apple Silicon machines;
-JavaScript tests cannot establish camera/audio/capture behavior on those machines.
+The macOS preview fix has compiled successfully on Intel and Apple Silicon macOS
+CI runners. The downloaded app ZIPs were checked for matching Electron, Go Core
+and capture-helper Mach-O architectures. Physical camera/audio/capture permission
+behavior remains untested; JavaScript tests cannot establish those device results.
 Windows installers are unsigned. No remote GitHub release or CI run is claimed by
 this local preparation. Device access and end-to-end viewer/audio behavior require
 additional physical testing.

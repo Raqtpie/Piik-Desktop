@@ -30,7 +30,7 @@ This is an independent community project, not an official Piik release. Piik is 
 
 Release artifacts will be available on [GitHub Releases](https://github.com/Raqtpie/Piik-Desktop/releases) after publication. Windows builds produce an NSIS `.exe`; macOS targets produce `.dmg` and `.zip` files.
 
-Windows is the currently tested platform. macOS Intel/Apple Silicon build targets are included, but the patched capture helper and camera/audio behavior still require compilation and testing on a physical Mac. See [validation status](docs/VALIDATION.md).
+Windows is the currently tested platform. macOS x64 and arm64 packages have compiled successfully in CI; native capture permissions, camera and audio behavior still require testing on a physical Mac. See [validation status](docs/VALIDATION.md).
 
 ### Build from source
 
@@ -126,7 +126,7 @@ Piik Desktop 是由 [Raqtpie](https://github.com/Raqtpie) 与 Piik community 维
 
 发布后可在 [GitHub Releases](https://github.com/Raqtpie/Piik-Desktop/releases) 下载。Windows 构建生成 NSIS `.exe` 安装包，macOS 目标生成 `.dmg` 与 `.zip`。
 
-当前已在 Windows 验证。项目包含 macOS Intel 与 Apple Silicon 构建配置，但 macOS 捕获助手补丁、摄像头和音频仍需在实体 Mac 上编译与验证。完整范围见 [验证记录](docs/VALIDATION.md)。
+当前已在 Windows 验证。macOS x64 与 arm64 安装包已完成 CI 编译，但捕获权限、摄像头和音频仍需在实体 Mac 上验证。完整范围见 [验证记录](docs/VALIDATION.md)。
 
 ### 源码构建
 
