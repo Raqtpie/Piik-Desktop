@@ -4,7 +4,7 @@ const $=id=>document.getElementById(id);
 const TEXT={
   zh:{tagline:'隐藏成就：有人懂你的快乐。',open:'打开 Piik',local:'本地房间',localNote:'同一局域网内使用',
     public:'公网邀请',publicNote:'生成一个临时公网邀请链接',site:'连接站点',siteNote:'使用已有的 Piik 站点',
-    enter:'进入 Piik',credit:'Raqtpie & Piik community · MIT 开源',upstreamCredit:'基于 TNTcraft 与贡献者开发的 Piik',official:'Piik 官网 ↗',github:'桌面端源码 ↗',
+    enter:'进入 Piik',credit:'Raqtpie & Piik community · MIT 开源',upstreamCredit:'基于 TNTcraft 与贡献者开发的 Piik',official:'Piik 官网 ↗',github:'桌面端源码 ↗',upstreamGithub:'Piik 源码 ↗',
     home:'首页',refresh:'刷新',logs:'日志',settings:'桌面设置',tray:'关闭窗口时最小化到托盘',done:'完成',
     settingNote:'分享、音频和房间功能仍由上游 Piik 负责。',light:'亮色',dark:'暗色',
     starting:'正在连接 Piik，请稍候…',loadingSite:'正在打开 Piik…',loadingHint:'连接就绪后将自动进入。',missing:'未找到上游 Piik App，请先执行 npm run upstream:prepare。',
@@ -12,7 +12,7 @@ const TEXT={
     connected:'已连接',cancelled:'已取消连接。',connectError:'连接失败：',publicMode:'公网邀请',localMode:'本地房间',recent:'最近使用',removeRecent:'删除这条记录',allowRedirects:'允许网站自动跳转',redirectHint:'网站地址或端口变化时，直接继续连接。只建议用于你信任的网站。'},
   en:{tagline:'Hidden achievement: someone gets your joy.',open:'Open Piik',local:'Local Room',localNote:'Use on the same LAN',
     public:'Public Invite',publicNote:'Create a temporary public invitation',site:'Connect to Site',siteNote:'Connect to an existing Piik site',
-    enter:'Enter Piik',credit:'Raqtpie & Piik community · MIT licensed',upstreamCredit:'Powered by Piik, by TNTcraft and contributors',official:'Piik Website ↗',github:'Desktop Source ↗',
+    enter:'Enter Piik',credit:'Raqtpie & Piik community · MIT licensed',upstreamCredit:'Powered by Piik, by TNTcraft and contributors',official:'Piik Website ↗',github:'Desktop Source ↗',upstreamGithub:'Piik Source ↗',
     home:'Home',refresh:'Refresh',logs:'Logs',settings:'Desktop Settings',tray:'Minimize to tray when closing the window',done:'Done',
     settingNote:'Sharing, audio and room features remain provided by upstream Piik.',light:'Light',dark:'Dark',
     starting:'Connecting to Piik…',loadingSite:'Opening Piik…',loadingHint:'Your room will open when the connection is ready.',missing:'Upstream Piik App not found. Run npm run upstream:prepare first.',
@@ -122,6 +122,7 @@ $('settingsLogsBtn').addEventListener('click',()=>void api.openLog());
 $('settingsModal').addEventListener('click',event=>{if(event.target===$('settingsModal'))$('settingsModal').hidden=true;});
 $('officialBtn').addEventListener('click',()=>void api.openExternal('https://piik.tv/'));
 $('githubBtn').addEventListener('click',()=>void api.openExternal('https://github.com/Raqtpie/Piik-Desktop'));
+$('upstreamGithubBtn').addEventListener('click',()=>void api.openExternal('https://github.com/TNTcraftHIM/Piik'));
 api.onState(({type,status,error,message,mode:nextMode,origin})=>{
   if(type==='loading')showConnected(true,origin,nextMode,true);
   if(type==='home')showConnected(false);
