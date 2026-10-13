@@ -2,7 +2,7 @@
 
 ## 0.1.0
 
-First public release of Piik Desktop, maintained by Raqtpie and the Piik community.
+First public release of Piik Desktop.
 
 - Native launcher with Local Room, Public Invite and Connect to Site modes.
 - English/Chinese, themes, recent sites, loading UI, origin confirmation and tray behavior.
