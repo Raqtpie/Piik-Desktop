@@ -25,7 +25,7 @@ test('Go App always starts in upstream no-browser explicit mode',()=>{
 });
 test('packaging script downloads official release and verifies exact SHA256',()=>{
   const s=source('scripts/prepare-upstream.cjs');
-  assert.match(s,/const RELEASE = 'v1\.9\.2'/);assert.ok(s.includes('actual!==expected'));
+  assert.match(s,/const RELEASE = 'v2\.1\.0'/);assert.ok(s.includes('actual!==expected'));
   assert.ok(!s.includes('build-bridge'));
 });
 
@@ -37,4 +37,15 @@ test('launcher includes a readable opt-in website redirect control',()=>{
   assert.ok(main.includes('allowSiteRedirects:false'));
   assert.ok(main.includes('mayAutoFollowAtConnect'));
   assert.ok(main.includes('runtimeNavigation(target)')); // Later navigation still asks.
+});
+
+test('frontend vendor lock matches core pin and ships in-repo assets',()=>{
+  const fs=require('node:fs');const path=require('node:path');
+  const manifest=JSON.parse(fs.readFileSync(path.join(root,'vendor/frontend/MANIFEST.json'),'utf8'));
+  const prepare=source('scripts/prepare-upstream.cjs');
+  assert.equal(manifest.piikRelease,'v2.1.0');
+  assert.equal(manifest.signalingProtocol,'piik-v24');
+  assert.match(prepare,/assertFrontendLock/);
+  assert.ok(fs.existsSync(path.join(root,'vendor/frontend/index.html')));
+  assert.ok(fs.existsSync(path.join(root,'docs/VENDOR-FRONTEND.md')));
 });

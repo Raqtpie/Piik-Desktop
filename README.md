@@ -1,6 +1,6 @@
 # Piik Desktop
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/Raqtpie/Piik-Desktop/releases)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue)](https://github.com/Raqtpie/Piik-Desktop/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Electron](https://img.shields.io/badge/Electron-44.7.0-47848f)](https://www.electronjs.org/)
 
@@ -12,7 +12,7 @@ A community desktop client for [Piik](https://github.com/TNTcraftHIM/Piik) on Wi
 
 Piik Desktop wraps Piik's official room and native sharing experience in an Electron app for Windows and macOS. Its launcher offers **Local Room**, **Public Invite**, and **Connect to Site** without opening an external browser.
 
-This is an independent community project, not an official Piik release. Piik is developed by TNTcraft and its contributors. Desktop release **0.1.0** is the first public version; the bundled Piik App is pinned to **v1.9.2**.
+This is an independent community project, not an official Piik release. Piik is developed by TNTcraft and its contributors. Desktop **0.2.0** locks the bundled Piik App and Browser UI to **v2.1.0** (signaling `piik-v24`), which is protocol-compatible with 2.0.x but still incompatible with 1.x. See [Vendor Frontend](docs/VENDOR-FRONTEND.md).
 
 ## Features
 
@@ -56,7 +56,7 @@ npm run dist
 
 `npm run pack` creates an unpacked app for testing. Build on the target platform and prepare upstream assets for that same architecture. Unsigned macOS builds use `CSC_IDENTITY_AUTO_DISCOVERY=false` in the environment. For supported matrix builds, see [GitHub Actions](.github/workflows/build-desktop.yml).
 
-The preparation script verifies the official Piik release archive with a pinned SHA-256 checksum. On Windows it keeps the official helper unchanged. On macOS it builds the pinned MIT-licensed helper source with the missing `--preview` command added; the Go/React source remains unchanged. [Native source provenance](native/darwin/PROVENANCE.md).
+The preparation script verifies the official Piik release archive with a pinned SHA-256 checksum and checks that in-repo `vendor/frontend` matches the same Core pin (one Core version ↔ one frontend). On Windows it keeps the official helper unchanged. On macOS it still builds Desktop’s MIT helper with the missing `--preview` command (upstream still lacks it; `native/darwin` was not rewritten for this pin). [Native source provenance](native/darwin/PROVENANCE.md). [Vendor Frontend](docs/VENDOR-FRONTEND.md).
 
 ## Usage
 
@@ -74,14 +74,17 @@ A new installation has no preset site. Up to five recent sites are kept in the a
 | `npm start` | Run the app |
 | `npm run dev` | Run with development tools available |
 | `npm run check` | Run tests and JavaScript syntax checks |
-| `npm run upstream:prepare` | Download and verify Piik App assets; build the Mac helper when needed |
+| `npm run upstream:prepare` | Verify vendor/frontend, then download and verify Piik App; build the Mac helper when needed |
+| `npm run frontend:sync` | Refresh the in-repo Browser UI vendor for the current Core pin |
+| `npm run frontend:verify` | Verify vendor/frontend matches the Core pin and file checksums |
 | `npm run pack` | Build an unpacked app |
 | `npm run dist` | Build an installer/archive |
 
 ```text
 src/                   Electron lifecycle, launcher, dialogs and UI adapters
 native/darwin/         Pinned macOS capture helper plus the preview fix
-scripts/               Upstream asset preparation
+scripts/               Upstream Core prepare + frontend vendor sync
+vendor/frontend/       Browser UI locked to the same Core tag (committed)
 tests/                 Permissions, navigation, UI and process lifecycle tests
 .github/workflows/     Windows and macOS build jobs
 assets/                App icons
@@ -90,11 +93,19 @@ licenses/              Upstream license notices
 
 Generated dependencies, upstream binaries, build caches, installers and personal configuration are excluded by `.gitignore`. Please report reproducible problems through [Issues](https://github.com/Raqtpie/Piik-Desktop/issues); include your OS, app version, mode and sanitized diagnostics. See [Contributing](CONTRIBUTING.md).
 
+## Upstream pin and upgrade path
+
+- **Current pin**: Piik **v2.1.0** Core + matching `vendor/frontend`.
+- **From Desktop 0.1.0 / Piik 1.x Site**: upgrade the whole stack to 2.x. Mixed 1.x/2.x sessions cannot join.
+- **2.0.x → 2.1.0**: protocol/DB compatible (still `piik-v24`); Desktop 0.2.0 bundles Piik 2.1.0.
+- Refreshing the vendor tree: [docs/VENDOR-FRONTEND.md](docs/VENDOR-FRONTEND.md).
+
 ## Limitations
 
 - Installers are unsigned. No signing certificate or notarization is included.
 - macOS runtime verification is pending; automated JavaScript tests cannot establish native capture behavior.
-- UI adapters target Piik v1.9.2 markup and need review when upgrading Piik.
+- UI adapters originally targeted Piik v1.9.2 markup; re-check them against **v2.1.0** on device.
+- **Piik 2.0 is incompatible with 1.x** (`piik-v23`→`piik-v24`). Connect only to compatible 2.x sites; App and Site must upgrade together.
 - Piik's native Core owns capture, audio and WebRTC transport. Public invitation availability depends on its upstream tunnel service.
 - There is no automatic update service or telemetry added by the desktop shell.
 
