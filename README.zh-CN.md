@@ -7,7 +7,7 @@
 
 Piik Desktop 是适用于 Windows 和 macOS 的 [Piik](https://github.com/TNTcraftHIM/Piik) 社区桌面客户端。它将 Piik 官方房间页面与原生分享能力集成到 Electron 应用中，提供 **本地房间、公网邀请、连接站点** 三种入口，无需打开外部浏览器。
 
-本项目为独立社区项目，并非 Piik 官方发行版。Piik 由 TNTcraft 与贡献者开发。桌面端 **0.1.0** 为首个公开版本，内置 Piik App 固定为 **v1.9.2**。
+本项目为独立社区项目，并非 Piik 官方发行版。Piik 由 TNTcraft 与贡献者开发。桌面端 **0.2.0** 将内置 Piik App / Browser UI 固定为 **v2.1.0**（信令 `piik-v24`），与 2.0.x 协议兼容，仍与 1.x 不兼容；见 [Vendor Frontend](docs/VENDOR-FRONTEND.md)。
 
 ## 功能
 
@@ -46,7 +46,7 @@ npm run dist
 
 `npm run pack` 生成未打包安装器的测试应用目录。请在目标平台、对应架构上准备上游资源与构建；未签名 macOS 构建需设置环境变量 `CSC_IDENTITY_AUTO_DISCOVERY=false`。构建矩阵见 [GitHub Actions](.github/workflows/build-desktop.yml)。
 
-准备脚本使用固定 SHA-256 校验 Piik 官方发行包。Windows 保留官方捕获助手；macOS 从固定的 MIT 源码构建助手，补上缺失的 `--preview` 命令。Go 与 React 源码保持原样。见 [原生源码来源说明](native/darwin/PROVENANCE.md)。
+准备脚本使用固定 SHA-256 校验 Piik 官方发行包，并校验仓库内 `vendor/frontend` 与 Core 钉版本一致（一版对一版）。Windows 保留官方捕获助手；macOS 仍用 Desktop 的 MIT 助手源码补上上游仍缺失的 `--preview` 命令（本次升级未改写 `native/darwin`）。见 [原生源码来源说明](native/darwin/PROVENANCE.md) 与 [Vendor Frontend](docs/VENDOR-FRONTEND.md)。
 
 ## 使用方法
 
@@ -64,14 +64,17 @@ npm run dist
 | `npm start` | 启动应用 |
 | `npm run dev` | 启动应用并开启开发工具 |
 | `npm run check` | 执行测试和 JavaScript 语法检查 |
-| `npm run upstream:prepare` | 下载并校验 Piik App 资源，按需构建 Mac 助手 |
+| `npm run upstream:prepare` | 校验 vendor/frontend 后下载并校验 Piik App，按需构建 Mac 助手 |
+| `npm run frontend:sync` | 按当前 Core 钉刷新仓库内 Browser UI vendor |
+| `npm run frontend:verify` | 校验 vendor/frontend 与 Core 钉、文件校验和 |
 | `npm run pack` | 生成未打包安装器的测试应用目录 |
 | `npm run dist` | 生成安装包或压缩包 |
 
 ```text
 src/                   Electron 生命周期、启动页、弹窗与界面适配
 native/darwin/         固定版本的 macOS 捕获助手与预览修复
-scripts/               上游资源准备脚本
+scripts/               上游 Core 准备与 frontend vendor 同步
+vendor/frontend/       与 Core 同版本的 Browser UI（入库）
 tests/                 权限、导航、界面与进程生命周期测试
 .github/workflows/     Windows 和 macOS 构建任务
 assets/                应用图标
@@ -80,11 +83,19 @@ licenses/              上游许可证声明
 
 依赖、上游二进制、构建缓存、安装包和个人配置均由 `.gitignore` 排除。欢迎通过 [Issues](https://github.com/Raqtpie/Piik-Desktop/issues) 提交问题，请提供系统、应用版本、连接模式和已去除敏感信息的诊断。贡献说明见 [贡献指南](CONTRIBUTING.zh-CN.md)。
 
+## 上游版本钉与升级路径
+
+- **当前钉**：Piik **v2.1.0** Core + 同版本 `vendor/frontend`。
+- **从 Desktop 0.1.0 / Piik 1.x Site 升级**：必须整体升到 2.x。2.0.0 起信令与画质设置不兼容 1.x；混用会导致无法进房。
+- **2.0.x → 2.1.0**：协议/DB 兼容（仍为 `piik-v24`）；Desktop 0.2.0 内置 Piik 2.1.0。
+- 刷新 vendor：见 [docs/VENDOR-FRONTEND.md](docs/VENDOR-FRONTEND.md)。
+
 ## 已知限制
 
 - 安装包未签名，项目未包含签名证书或 macOS 公证。
 - macOS 实机验证尚未完成，JavaScript 测试无法证明原生设备链路正常。
-- 界面适配针对 Piik v1.9.2；升级上游时需要重新检查。
+- 界面适配最初针对 Piik v1.9.2；升级到 **v2.1.0** 后需在实机重新检查卡片/邀请等 DOM 适配。
+- **Piik 2.0 与 1.x 不兼容**（`piik-v23`→`piik-v24`）。连接站点时请使用 2.x Site；App 与 Site 须同代升级。
 - 采集、音频和 WebRTC 传输由 Piik Core 负责，公网邀请可用性取决于上游隧道服务。
 - 桌面壳未增加自动更新服务或遥测。
 

@@ -1,7 +1,7 @@
 {
   "name": "piik-desktop-shell",
   "productName": "Piik Desktop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Community desktop app for Piik, with a native launcher and screen-sharing integration.",
   "main": "src/main.cjs",
@@ -10,11 +10,13 @@
     "start": "electron .",
     "dev": "electron . --dev",
     "test": "node --test tests/*.test.cjs",
-    "check": "npm run test && node --check src/main.cjs && node --check src/renderer.cjs && node --check src/navigation.cjs && node --check src/supervisor.cjs && node --check src/security.cjs && node --check scripts/prepare-upstream.cjs && node --check src/preload.cjs && node --check src/confirm-preload.cjs && node --check src/confirm-dialog.cjs && node --check src/history.cjs && node --check src/picker-adapter.cjs && node --check src/invite-adapter.cjs",
+    "check": "npm run test && npm run frontend:verify && node --check src/main.cjs && node --check src/renderer.cjs && node --check src/navigation.cjs && node --check src/supervisor.cjs && node --check src/security.cjs && node --check scripts/prepare-upstream.cjs && node --check scripts/sync-frontend-vendor.cjs && node --check src/preload.cjs && node --check src/confirm-preload.cjs && node --check src/confirm-dialog.cjs && node --check src/history.cjs && node --check src/picker-adapter.cjs && node --check src/invite-adapter.cjs",
     "upstream:prepare": "node scripts/prepare-upstream.cjs",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "postinstall": "node node_modules/electron/install.js"
+    "postinstall": "node node_modules/electron/install.js",
+    "frontend:sync": "node scripts/sync-frontend-vendor.cjs",
+    "frontend:verify": "node -e \"require('./scripts/prepare-upstream.cjs').assertFrontendLock(); console.log('frontend lock OK')\""
   },
   "devDependencies": {
     "electron": "44.7.0",
@@ -29,6 +31,8 @@
     "files": [
       "src/**/*",
       "assets/**/*",
+      "vendor/frontend/**/*",
+      "docs/VENDOR-FRONTEND.md",
       "package.json",
       "LICENSE",
       "licenses/**/*",

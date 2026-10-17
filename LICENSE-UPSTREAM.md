@@ -11,7 +11,10 @@ this wrapper **must include the upstream LICENSE and licenses files** from the
 verified release asset, and review them before distributing binaries.
 
 Windows uses the upstream binaries unchanged. On macOS, the build script replaces
-only the native capture helper with the pinned MIT source plus the missing
-source-preview command. See native/darwin/PROVENANCE.md. Go/React remain unchanged.
-The upstream archive version and SHA-256 hash are pinned in
-`scripts/prepare-upstream.cjs` and written into the bundled manifest.
+only the native capture helper with Desktop’s MIT source plus the missing
+source-preview command. The v2.1.0 pin retains the helper's v1.9.2 source baseline;
+see native/darwin/PROVENANCE.md for provenance and validation limits.
+
+The Browser UI matching the Core pin is also vendored under `vendor/frontend/`
+(see docs/VENDOR-FRONTEND.md). Core archive version and SHA-256 hashes are pinned
+in `scripts/prepare-upstream.cjs` and written into the bundled manifest.

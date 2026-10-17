@@ -1,0 +1,102 @@
+{
+  "name": "piik-frontend",
+  "piikRelease": "v2.1.0",
+  "piikRevision": "9925486cec9910c0a76e47208b29b6f39942e096",
+  "signalingProtocol": "piik-v24",
+  "source": {
+    "project": "https://github.com/TNTcraftHIM/Piik",
+    "tag": "v2.1.0",
+    "runtimeAsset": "piik-9925486-runtime.tar.gz",
+    "runtimeSha256": "76535d09d08b8a512126f1650d8b22ce9c48e4dbdedea30e21df6249de11845c",
+    "extraction": "Served static Browser UI from the matching piik-server package (embedded Vite dist)."
+  },
+  "compatibility": {
+    "appAndSiteMustMatch": true,
+    "incompatibleWith": [
+      "1.x"
+    ],
+    "notes": "Piik 2.0.0 broke SignalingProtocol piik-v23→piik-v24 and quality-settings shape. App + Site must upgrade together. v2.1.0 stays on piik-v24 / 2.x DB lineage (compatible with 2.0.x; still incompatible with 1.x)."
+  },
+  "files": [
+    {
+      "path": "assets/AppLauncherPage-DL25sDue.js",
+      "bytes": 43039,
+      "sha256": "9467dc240d7a889af188eb3aee541b98360a48a83108588e629a864f6207c19a"
+    },
+    {
+      "path": "assets/client-0nXieilM.js",
+      "bytes": 19639,
+      "sha256": "67089f19fb8e67c15f37784d377c1763339abfa221d49ed57838aa47f403c11a"
+    },
+    {
+      "path": "assets/HostPage-B8zsJh9V.css",
+      "bytes": 1380,
+      "sha256": "b8f9ac041285c85521d24a5e5416abb0621f78510899663acc086153a14dd789"
+    },
+    {
+      "path": "assets/HostPage-Dg-sYd9M.js",
+      "bytes": 136110,
+      "sha256": "984d659383461f3c232059d3dd450107b3be4b846030b967aa7b3e3bb39fcc03"
+    },
+    {
+      "path": "assets/index-eik60SVf.css",
+      "bytes": 82512,
+      "sha256": "b0298f26f7fdb931bfcf8af3481ed7674f1e0a34312302dd7df7b84e25135a93"
+    },
+    {
+      "path": "assets/index-gRheY9Mo.js",
+      "bytes": 591875,
+      "sha256": "2843dc00e5f81fc5a24191b4e68e1ffb93a3244350d29283aed3f413bcee8e15"
+    },
+    {
+      "path": "assets/JoinPage-BPfEODf5.js",
+      "bytes": 1322,
+      "sha256": "15c8af57c3d61533cb18fd6f2914a6e30cb20cb1ef10e971813c7d051f6b8597"
+    },
+    {
+      "path": "assets/RoomCodeInput-Bi5TKL26.js",
+      "bytes": 992,
+      "sha256": "5d4caafc083c414cbcd7b01a68dee45c38285bd893bfd17fd7a2e30b174e026c"
+    },
+    {
+      "path": "assets/video-codec-preflight-CPrZ8sCm.js",
+      "bytes": 199812,
+      "sha256": "e195545dd6891ad45485ae28fe7496cc6fec0cb5aa31a0d41be77fa66fe3e692"
+    },
+    {
+      "path": "assets/video-codec-preflight-DA2uORgf.css",
+      "bytes": 20418,
+      "sha256": "a732263b146d7048c2a0f441a609ceacacdbdcfcd97ea71e39616d97493f30ba"
+    },
+    {
+      "path": "assets/ViewerPage-BUM7-Z8n.js",
+      "bytes": 108141,
+      "sha256": "1b2ac90aa54c85d9b4e4d6472a5d02b2ca4ce1f7178a871e1c4ead9eec9c0976"
+    },
+    {
+      "path": "assets/ViewerPage-DW1FNgzU.css",
+      "bytes": 2620,
+      "sha256": "74101baaabbc80d28e3361e625dd3ba01e304a5a82bbd7c3a0664e2e9c2385fb"
+    },
+    {
+      "path": "assets/WelcomeLine-DIp5cAMo.js",
+      "bytes": 1284,
+      "sha256": "aa416c56dc41827bac8cecc741882c1df02ec5407c9aae02ea60c7078fed2c9f"
+    },
+    {
+      "path": "favicon.svg",
+      "bytes": 1039,
+      "sha256": "ad2518d543ce62be3013a6487513f09b8c5f36ece3e95c5de0bc1427be1bf914"
+    },
+    {
+      "path": "index.html",
+      "bytes": 1621,
+      "sha256": "36399c6aa2f2847dbb9635bb15702b522df522c587b03665bd52f9ed79832898"
+    },
+    {
+      "path": "third-party-licenses.txt",
+      "bytes": 6615,
+      "sha256": "4036940f3e3bd53e6e312750d324746abb913979a4197eb2b93eaea22a625e8b"
+    }
+  ]
+}
